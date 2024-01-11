@@ -42,6 +42,9 @@ function applyYtHolderShares(result, allBalances, allInterests, YTIndex) {
   }
 
   for (const i of allInterests) {
+    if (i.user == YT) {
+      continue;
+    }
     if (i.userIndex == '0') {
       if (YTBalances[i.user].gt(0)) {
         throw new Error(`Pendle Fetcher: User ${i.user} has YT balance but no index`)
