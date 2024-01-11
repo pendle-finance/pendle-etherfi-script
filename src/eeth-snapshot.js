@@ -52,8 +52,8 @@ async function fetchUserBalanceSnapshot(blockNumber) {
 }
 
 async function main() {
-  const BLOCK_NUMBER = 18938620;
-  await fetchUserBalanceSnapshot(BLOCK_NUMBER);
+  const BLOCK_NUMBER = 18982945;
+  console.log(await fetchUserBalanceSnapshot(BLOCK_NUMBER));
 }
 
 main()
