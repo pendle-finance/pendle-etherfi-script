@@ -65,11 +65,11 @@ const LIQUID_LOCKERS = [
     address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
     receiptToken: "0x17ea39035ad2cb5d8e2e005349ff23bb52d1c8b7",
   },
-  // {
-  //   // stakedao
-  //   address: "0xd8fa8dc5adec503acc5e026a98f32ca5c1fa289a",
-  //   receiptToken: "0xc9a675fffb6f8f821d9cd92c4036c61531b4eaeb",
-  // },
+  {
+    // stakedao
+    address: "0xd8fa8dc5adec503acc5e026a98f32ca5c1fa289a",
+    receiptToken: "0xc6bb9d3d4c980b53c31f6ffb998bea7e74029954",
+  },
 ];
 
 const SY = "0xac0047886a985071476a1186be89222659970d65";
