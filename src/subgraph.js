@@ -9,7 +9,7 @@ async function fetchAll(endpoint, query, collection, variables = {}) {
         if (batch.length < 1000) {
             break;
         }
-        synchingIndex = batch[batch.length - 1].synchingIndex;
+        synchingIndex = parseInt(batch[batch.length - 1].synchingIndex);
     }
     return datas;
 }
