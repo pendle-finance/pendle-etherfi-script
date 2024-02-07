@@ -26,9 +26,9 @@ const LIQUID_LOCKERS = [
   },
 ];
 
-const SY = "0xac0047886a985071476a1186be89222659970d65";
-const YT = "0xfb35fd0095dd1096b1ca49ad44d8c5812a201677";
-const LP = "0xf32e58f92e60f4b0a37a69b95d642a471365eae8";
+const SY = "0xa6c895eb332e91c5b3d00b7baeeaae478cc502da";
+const YT = "0xf28db483773e3616da91fdfa7b5d4090ac40cc59";
+const LP = "0xe11f9786b06438456b044b3e21712228adcaa0d1";
 
 const PENDLE_TREASURY = "0x8270400d528c34e1596ef367eedec99080a1b592";
 
