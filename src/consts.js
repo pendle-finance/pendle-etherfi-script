@@ -30,7 +30,7 @@ const SY = "0xa6c895eb332e91c5b3d00b7baeeaae478cc502da";
 const YT = "0xf28db483773e3616da91fdfa7b5d4090ac40cc59";
 const LP = "0xe11f9786b06438456b044b3e21712228adcaa0d1";
 
-const PENDLE_TREASURY = "0x8270400d528c34e1596ef367eedec99080a1b592";
+const PENDLE_TREASURY = "0xcbcb48e22622a3778b6f14c2f5d258ba026b05e6";
 
 const MARKET_IFACE = new ethers.utils.Interface(PendleMarketABI);
 const YIELD_TOKEN_IFACE = new ethers.utils.Interface(PendleYieldTokenABI);
