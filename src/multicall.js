@@ -1,9 +1,9 @@
 const MulticallABI = require("../abis/Multicall.json");
 const ethers = require("ethers");
 
-const MULTICALL_ADDRESS = "0xeefba1e63905ef1d7acba5a8513c70307c1ce441";
+const MULTICALL_ADDRESS = "0x842ec2c7d803033edf55e478f461fc547bc54eb2";
 const PROVIDER = new ethers.providers.JsonRpcProvider(
-  "https://rpc.ankr.com/eth"
+  "https://rpc.ankr.com/arbitrum"
 );
 const MULTICALL_CONTRACT = new ethers.Contract(
   MULTICALL_ADDRESS,
