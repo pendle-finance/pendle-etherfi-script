@@ -3,6 +3,7 @@ const {
   USER_BALANCE_QUERY,
   USER_PENDING_INTEREST_QUERY,
   YT_INDEX_QUERY,
+  PENDLE_TREASURY,
 } = require("./consts");
 const {
   applyLpHolderShares,
@@ -52,8 +53,9 @@ async function fetchUserBalanceSnapshot(blockNumber) {
 }
 
 async function main() {
-  const BLOCK_NUMBER = 18982945;
-  console.log(await fetchUserBalanceSnapshot(BLOCK_NUMBER));
+  const BLOCK_NUMBER = 19066100;
+  const res = await fetchUserBalanceSnapshot(BLOCK_NUMBER);
+  console.log(res[PENDLE_TREASURY].toString());
 }
 
 main()

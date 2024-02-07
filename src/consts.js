@@ -76,6 +76,8 @@ const SY = "0xac0047886a985071476a1186be89222659970d65";
 const YT = "0xfb35fd0095dd1096b1ca49ad44d8c5812a201677";
 const LP = "0xf32e58f92e60f4b0a37a69b95d642a471365eae8";
 
+const PENDLE_TREASURY = "0x8270400d528c34e1596ef367eedec99080a1b592";
+
 const MARKET_IFACE = new ethers.utils.Interface(PendleMarketABI);
 
 module.exports = {
@@ -88,4 +90,5 @@ module.exports = {
   YT,
   LP,
   MARKET_IFACE,
+  PENDLE_TREASURY
 };

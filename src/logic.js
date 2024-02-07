@@ -5,6 +5,7 @@ const {
   MARKET_IFACE,
   MULTICALL_CONTRACT,
   LIQUID_LOCKERS,
+  PENDLE_TREASURY,
 } = require("./consts");
 const { BigNumber } = require("ethers");
 const { aggregateMulticall } = require("./multicall");
@@ -37,7 +38,13 @@ function applyYtHolderShares(result, allBalances, allInterests, YTIndex) {
   for (const b of balances) {
     // result[b.user] = BigNumber.from(b.balance);
     const impliedBalance = BigNumber.from(b.balance).mul(_1E18).div(YTIndex);
-    increaseUserAmount(result, b.user, impliedBalance);
+    
+    const feeShare = impliedBalance.mul(3).div(100);
+    const remainingBalance = impliedBalance.sub(feeShare);
+
+    increaseUserAmount(result, b.user, remainingBalance);
+    increaseUserAmount(result, PENDLE_TREASURY, feeShare);
+
     YTBalances[b.user] = BigNumber.from(b.balance);
   }
 
