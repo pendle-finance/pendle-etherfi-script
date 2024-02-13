@@ -55,11 +55,11 @@ const YT_INDEX_QUERY = {
 };
 
 const LIQUID_LOCKERS = [
-  // {
-  //   // penpie
-  //   address: "0x6e799758cee75dae3d84e09d40dc416ecf713652",
-  //   receiptToken: "0x2da4401616dc5668100decfaf579229233b4ec1c",
-  // },
+  {
+    // penpie
+    address: "0x6db96bbeb081d2a85e0954c252f2c1dc108b3f81",
+    receiptToken: "0x11625278c86f87f1d6be5d911411ad22f00a77ef",
+  },
   // {
   //   // equilibira
   //   address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
