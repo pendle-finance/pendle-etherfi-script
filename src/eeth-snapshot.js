@@ -53,9 +53,8 @@ async function fetchUserBalanceSnapshot(blockNumber) {
 }
 
 async function main() {
-  const BLOCK_NUMBER = 19066100;
-  const res = await fetchUserBalanceSnapshot(BLOCK_NUMBER);
-  console.log(res[PENDLE_TREASURY].toString());
+  const BLOCK_NUMBER = 178242433;
+  console.log(await fetchUserBalanceSnapshot(BLOCK_NUMBER));
 }
 
 main()
