@@ -25,16 +25,15 @@ async function fetchUserBalanceSnapshotBatch(blockNumbers) {
 }
 
 async function main() {
-  const block = 19696523;
+  const block = 203064141;
   const res = (await fetchUserBalanceSnapshotBatch([block]))[0];
   const normalizedRes = {};
 
-  let sum = BigNumber.from(0);
   for (const user in res) {
     normalizedRes[user] = res[user].toString();
-    let multiplier = BigNumber.from('0x' + user[user.length - 1]).add(1);
-    sum = sum.add(res[user].mul(multiplier));
   }
+
+  fs.writeFileSync(`snapshots/${block}.json`, JSON.stringify(normalizedRes, null, 2))
 }
 
 main()

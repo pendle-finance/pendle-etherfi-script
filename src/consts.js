@@ -5,32 +5,25 @@ const ethers = require("ethers");
 const LIQUID_LOCKERS = [
   {
     // penpie
-    address: "0x6e799758cee75dae3d84e09d40dc416ecf713652",
-    receiptToken: "0x2da4401616dc5668100decfaf579229233b4ec1c",
-    lpToken: "0xf32e58f92e60f4b0a37a69b95d642a471365eae8",
-    deployedBlock: 18983977
+    address: "0x6db96bbeb081d2a85e0954c252f2c1dc108b3f81",
+    receiptToken: "0x264f4138161aae16b76dec7d4eeb756f25fa67cd",
+    lpToken: "0x952083cde7aaa11ab8449057f7de23a970aa8472",
+    deployedBlock: 198137402
   },
   {
     // equilibira
     address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
-    receiptToken: "0x17ea39035ad2cb5d8e2e005349ff23bb52d1c8b7",
-    lpToken: "0xf32e58f92e60f4b0a37a69b95d642a471365eae8",
-    deployedBlock: 18976214    
-  },
-  {  
-    // stakedao
-    address: "0xd8fa8dc5adec503acc5e026a98f32ca5c1fa289a",
-    receiptToken: "0xc6bb9d3d4c980b53c31f6ffb998bea7e74029954",
-    lpToken: "0xf32e58f92e60f4b0a37a69b95d642a471365eae8",
-    deployedBlock: 19027272
-  },
+    receiptToken: "0x5017d294d5c354cf12d2a11f004aeed21d3f9003",
+    lpToken: "0x952083cde7aaa11ab8449057f7de23a970aa8472",
+    deployedBlock: 197510687    
+  }
 ];
 
-const SY = "0xac0047886a985071476a1186be89222659970d65";
-const YT = "0xfb35fd0095dd1096b1ca49ad44d8c5812a201677";
-const LP = "0xf32e58f92e60f4b0a37a69b95d642a471365eae8";
+const SY = "0xa6c895eb332e91c5b3d00b7baeeaae478cc502da";
+const YT = "0xdcdc1004d5c271adc048982d7eb900cc4f472333";
+const LP = "0x952083cde7aaa11ab8449057f7de23a970aa8472";
 
-const PENDLE_TREASURY = "0x8270400d528c34e1596ef367eedec99080a1b592";
+const PENDLE_TREASURY = "0xcbcb48e22622a3778b6f14c2f5d258ba026b05e6";
 
 const MARKET_IFACE = new ethers.utils.Interface(PendleMarketABI);
 const YIELD_TOKEN_IFACE = new ethers.utils.Interface(PendleYieldTokenABI);
