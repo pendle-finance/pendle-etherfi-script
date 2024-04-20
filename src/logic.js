@@ -1,14 +1,10 @@
-const {
-  SY,
-  LP,
-  YT,
-  MARKET_IFACE,
-  MULTICALL_CONTRACT,
-  LIQUID_LOCKERS,
-  PENDLE_TREASURY,
-} = require("./consts");
+const { SY, LP, YT, LIQUID_LOCKERS, PENDLE_TREASURY } = require("./consts");
 const { BigNumber } = require("ethers");
-const { aggregateMulticall } = require("./multicall");
+const {
+  getAllERC20Balances,
+  getAllYTInterestData,
+  getAllMarketActiveBalances,
+} = require("./multicall");
 
 // in domination of yield token (WEETH)
 
@@ -21,24 +17,35 @@ function increaseUserAmount(result, user, amount) {
   result[user] = result[user].add(amount);
 }
 
-function applySyHoldersShares(result, allBalances) {
-  const balances = allBalances.filter(
-    (b) => b.token == SY && b.user != LP && b.user != YT
+async function applyYtHolderShares(result, allUsers, blockNumber) {
+  const balances = (await getAllERC20Balances(YT, allUsers, blockNumber)).map((v, i) => {
+    return {
+      user: allUsers[i],
+      balance: v,
+    };
+  });
+
+  const allInterests = (await getAllYTInterestData(YT, allUsers, blockNumber)).map(
+    (v, i) => {
+      return {
+        user: allUsers[i],
+        userIndex: v.index,
+        amount: v.accrue,
+      };
+    }
   );
-  for (const b of balances) {
-    increaseUserAmount(result, b.user, BigNumber.from(b.balance));
-  }
-}
 
-function applyYtHolderShares(result, allBalances, allInterests, YTIndex) {
-  const balances = allBalances.filter((b) => b.token == YT); // no exlude?
+  // using max index (not current index) won't affect the result
+  const YTIndex = allInterests
+    .map((v) => v.userIndex)
+    .reduce((a, b) => (a.gt(b) ? a : b), BigNumber.from(0));
+
   const YTBalances = {};
-
   // 1 YT is receiving interest from
   for (const b of balances) {
     // result[b.user] = BigNumber.from(b.balance);
     const impliedBalance = BigNumber.from(b.balance).mul(_1E18).div(YTIndex);
-    
+
     const feeShare = impliedBalance.mul(3).div(100);
     const remainingBalance = impliedBalance.sub(feeShare);
 
@@ -52,9 +59,11 @@ function applyYtHolderShares(result, allBalances, allInterests, YTIndex) {
     if (i.user == YT) {
       continue;
     }
-    if (i.userIndex == '0') {
+    if (i.userIndex == "0") {
       if (YTBalances[i.user].gt(0)) {
-        throw new Error(`Pendle Fetcher: User ${i.user} has YT balance but no index`)
+        throw new Error(
+          `Pendle Fetcher: User ${i.user} has YT balance but no index`
+        );
       }
       continue;
     }
@@ -67,61 +76,65 @@ function applyYtHolderShares(result, allBalances, allInterests, YTIndex) {
   }
 }
 
-async function applyLpHolderShares(result, allBalances, blockNumber) {
-  const totalSyForLP = allBalances.filter(
-    (b) => b.token == SY && b.user == LP
-  )[0].balance;
-
-  const allLpHolders = allBalances
-    .filter((b) => b.token == LP)
-    .map((b) => b.user);
-
-  const callDatas = allLpHolders.map((h) => {
-    return {
-      target: LP,
-      callData: MARKET_IFACE.encodeFunctionData("activeBalance", [h]),
-    };
-  });
-
-  const allActiveBalances = (
-    await aggregateMulticall(callDatas, blockNumber)
-  ).map((r) => BigNumber.from(r));
-  const totalActiveBalance = allActiveBalances.reduce(
+async function applyLpHolderShares(result, lpToken, allUsers, blockNumber) {
+  const totalSy = (await getAllERC20Balances(SY, [LP], blockNumber))[0];
+  const allActiveBalances = await getAllMarketActiveBalances(
+    lpToken,
+    allUsers,
+    blockNumber
+  );
+  const totalActiveSupply = allActiveBalances.reduce(
     (a, b) => a.add(b),
     BigNumber.from(0)
   );
 
-  function processLiquidLocker(liquidLocker, totalBoostedSy) {
-    const receiptToken = LIQUID_LOCKERS.filter(
-      (l) => l.address == liquidLocker
-    )[0].receiptToken;
-    const receiptTokenBalance = allBalances.filter(
-      (b) => b.token == receiptToken
+  async function processLiquidLocker(liquidLocker, totalBoostedSy) {
+    const validLockers = LIQUID_LOCKERS.filter(
+      (l) => l.address == liquidLocker && l.lpToken == lpToken
     );
 
-    let totalLiquidLockerShares = BigNumber.from(0);
-    for (const b of receiptTokenBalance) {
-      totalLiquidLockerShares = totalLiquidLockerShares.add(
-        BigNumber.from(b.balance)
-      );
+    if (
+      validLockers.length == 0 ||
+      validLockers[0].deployedBlock > blockNumber
+    ) {
+      return;
     }
 
-    for (const b of receiptTokenBalance) {
+    const receiptToken = validLockers[0].receiptToken;
+    const allReceiptTokenBalances = await getAllERC20Balances(
+      receiptToken,
+      allUsers,
+      blockNumber
+    );
+    const totalLiquidLockerShares = allReceiptTokenBalances.reduce(
+      (a, b) => a.add(b),
+      BigNumber.from(0)
+    );
+
+    console.log(validLockers, totalBoostedSy.toString(), totalLiquidLockerShares.toString());
+
+    if (totalLiquidLockerShares.eq(0)) {
+      return;
+    }
+
+    for (let i = 0; i < allUsers.length; i++) {
+      const user = allUsers[i];
+      const receiptTokenBalance = allReceiptTokenBalances[i];
       const boostedSyBalance = totalBoostedSy
-        .mul(BigNumber.from(b.balance))
+        .mul(receiptTokenBalance)
         .div(totalLiquidLockerShares);
-      increaseUserAmount(result, b.user, boostedSyBalance);
+      increaseUserAmount(result, user, boostedSyBalance);
     }
   }
 
-  for (let i = 0; i < allLpHolders.length; i++) {
-    const holder = allLpHolders[i];
+  for (let i = 0; i < allUsers.length; i++) {
+    const holder = allUsers[i];
     const boostedSyBalance = allActiveBalances[i]
-      .mul(totalSyForLP)
-      .div(totalActiveBalance);
+      .mul(totalSy)
+      .div(totalActiveSupply);
 
     if (isLiquidLocker(holder)) {
-      processLiquidLocker(holder, boostedSyBalance);
+      await processLiquidLocker(holder, boostedSyBalance);
     } else {
       increaseUserAmount(result, holder, boostedSyBalance);
     }
@@ -133,7 +146,6 @@ function isLiquidLocker(a) {
 }
 
 module.exports = {
-  applySyHoldersShares,
   applyYtHolderShares,
   applyLpHolderShares,
 };

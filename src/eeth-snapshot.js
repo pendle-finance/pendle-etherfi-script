@@ -1,61 +1,40 @@
-const {
-  SUBGRAPH_ENDPOINT,
-  USER_BALANCE_QUERY,
-  USER_PENDING_INTEREST_QUERY,
-  YT_INDEX_QUERY,
-  PENDLE_TREASURY,
-} = require("./consts");
-const {
-  applyLpHolderShares,
-  applyYtHolderShares,
-  applySyHoldersShares,
-} = require("./logic");
-const { fetchAll } = require("./subgraph");
+const { LP, YT, LIQUID_LOCKERS } = require("./consts");
+const { applyLpHolderShares, applyYtHolderShares } = require("./logic");
 const { BigNumber } = require("ethers");
+const { getAllPendleUsers } = require("./pendle-api");
+const fs = require("fs");
 
-async function fetchUserBalanceSnapshot(blockNumber) {
+async function fetchUserBalanceSnapshot(allYTUsers, allLPUsers, blockNumber) {
   const result = {};
-  const [allBalances, allInterests, indexes] = await Promise.all([
-    fetchAll(
-      SUBGRAPH_ENDPOINT,
-      USER_BALANCE_QUERY.query,
-      USER_BALANCE_QUERY.collection,
-      { block: blockNumber }
-    ),
-    fetchAll(
-      SUBGRAPH_ENDPOINT,
-      USER_PENDING_INTEREST_QUERY.query,
-      USER_PENDING_INTEREST_QUERY.collection,
-      { block: blockNumber }
-    ),
-    fetchAll(
-      SUBGRAPH_ENDPOINT,
-      YT_INDEX_QUERY.query,
-      YT_INDEX_QUERY.collection,
-      { block: blockNumber }
-    ),
-  ]);
-
-  applySyHoldersShares(result, allBalances);
-  applyYtHolderShares(
+  await applyYtHolderShares(
     result,
-    allBalances,
-    allInterests,
-    BigNumber.from(indexes[0].index)
+    allYTUsers,
+    blockNumber
   );
-  await applyLpHolderShares(result, allBalances, blockNumber);
-
-  let sum = BigNumber.from(0);
-  for (const user in result) {
-    sum = sum.add(result[user]);
-  }
+  await applyLpHolderShares(result, LP, allLPUsers, blockNumber);
   return result;
 }
 
+async function fetchUserBalanceSnapshotBatch(blockNumbers) {
+  const allLiquidLockerTokens = LIQUID_LOCKERS.map((locker) => locker.receiptToken);
+  let allYTUsers = await getAllPendleUsers([YT]);
+  let allLPUsers = await getAllPendleUsers([LP, ...allLiquidLockerTokens]);
+  return await Promise.all(
+    blockNumbers.map((b) => fetchUserBalanceSnapshot(allYTUsers, allLPUsers, b))
+  );
+}
+
 async function main() {
-  const BLOCK_NUMBER = 19066100;
-  const res = await fetchUserBalanceSnapshot(BLOCK_NUMBER);
-  console.log(res[PENDLE_TREASURY].toString());
+  const block = 19696523;
+  const res = (await fetchUserBalanceSnapshotBatch([block]))[0];
+  const normalizedRes = {};
+
+  let sum = BigNumber.from(0);
+  for (const user in res) {
+    normalizedRes[user] = res[user].toString();
+    let multiplier = BigNumber.from('0x' + user[user.length - 1]).add(1);
+    sum = sum.add(res[user].mul(multiplier));
+  }
 }
 
 main()
