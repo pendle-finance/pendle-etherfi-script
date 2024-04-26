@@ -111,7 +111,6 @@ async function applyLpHolderShares(result, lpToken, allUsers, blockNumber) {
       BigNumber.from(0)
     );
 
-    console.log(validLockers, totalBoostedSy.toString(), totalLiquidLockerShares.toString());
 
     if (totalLiquidLockerShares.eq(0)) {
       return;
