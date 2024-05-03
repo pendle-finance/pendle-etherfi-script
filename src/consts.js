@@ -10,13 +10,13 @@ const LIQUID_LOCKERS = [
     lpToken: "0x7d372819240d14fb477f17b964f95f33beb4c704",
     deployedBlock: 19680970
   },
-  // {
-  //   // equilibira
-  //   address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
-  //   receiptToken: "0x17ea39035ad2cb5d8e2e005349ff23bb52d1c8b7",
-  //   lpToken: "0x7d372819240D14fB477f17b964f95F33BeB4c704",
-  //   deployedBlock: 18976214    
-  // },
+  {
+    // equilibira
+    address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
+    receiptToken: "0xd2539f03427dbd70c7cc42b779fa41f994cc4bfa",
+    lpToken: "0x7d372819240d14fb477f17b964f95f33beb4c704",
+    deployedBlock: 19754611    
+  },
   // {  
   //   // stakedao
   //   address: "0xd8fa8dc5adec503acc5e026a98f32ca5c1fa289a",
