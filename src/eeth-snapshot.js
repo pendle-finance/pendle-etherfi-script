@@ -25,12 +25,15 @@ async function fetchUserBalanceSnapshotBatch(blockNumbers) {
 }
 
 async function main() {
-  const block = 19696523;
+  const block = 19929523;
   const res = (await fetchUserBalanceSnapshotBatch([block]))[0];
   const normalizedRes = {};
 
   let sum = BigNumber.from(0);
   for (const user in res) {
+
+    console.log(user, res[user].toString());
+
     normalizedRes[user] = res[user].toString();
     let multiplier = BigNumber.from('0x' + user[user.length - 1]).add(1);
     sum = sum.add(res[user].mul(multiplier));
