@@ -4,7 +4,7 @@ const { MARKET_IFACE, YIELD_TOKEN_IFACE } = require("./consts");
 
 const MULTICALL_ADDRESS = "0xca11bde05977b3631167028862be2a173976ca11";
 const PROVIDER = new ethers.providers.JsonRpcProvider(
-  "https://rpc.ankr.com/arbitrum"
+  "https://rpc.ankr.com/bsc"
 );
 const MULTICALL_CONTRACT = new ethers.Contract(
   MULTICALL_ADDRESS,

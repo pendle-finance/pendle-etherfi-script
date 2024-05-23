@@ -5,17 +5,17 @@ const ethers = require("ethers");
 const LIQUID_LOCKERS = [
   {
     // penpie
-    address: "0x6db96bbeb081d2a85e0954c252f2c1dc108b3f81",
-    receiptToken: "0xa7d760926f3098e9fb5a93018155578fcdad75c0",
-    lpToken: "0xf9f9779d8ff604732eba9ad345e6a27ef5c2a9d6",
-    deployedBlock: 211800842
+    address: "0x782d9d67feaa4d1cdf8222d9053c8cba1c3b7982",
+    receiptToken: "0xb0f7776983ee446c7d689bc726c8b966da837e24",
+    lpToken: "0x27255f9aff1868a8efb1182471f4de2121946fd0",
+    deployedBlock: 38768028
   },
   {
     // equilibira
     address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
-    receiptToken: "0x198ddb596a080215f0e15caeabca7eab6b2d7a8f",
-    lpToken: "0xf9f9779d8ff604732eba9ad345e6a27ef5c2a9d6",
-    deployedBlock: 213150189
+    receiptToken: "0x524be708c4731af532dfed1ae3f0c599733d5c01",
+    lpToken: "0x27255f9aff1868a8efb1182471f4de2121946fd0",
+    deployedBlock: 38883841
   },
   // {  
   //   // stakedao
@@ -26,9 +26,9 @@ const LIQUID_LOCKERS = [
   // },
 ];
 
-const SY = "0xa6c895eb332e91c5b3d00b7baeeaae478cc502da";
-const YT = "0xfb2a7ac0372c2425c273932f8d438518402a873e";
-const LP = "0xf9f9779d8ff604732eba9ad345e6a27ef5c2a9d6";
+const SY = "0x56b70ac3a6ae850f6aee67591d1bb86895ba211e";
+const YT = "0xbf1e6e67ce2bd8da1ea7342354126b59b46d4000";
+const LP = "0x27255f9aff1868a8efb1182471f4de2121946fd0";
 
 const PENDLE_TREASURY = "0x8270400d528c34e1596ef367eedec99080a1b592";
 
